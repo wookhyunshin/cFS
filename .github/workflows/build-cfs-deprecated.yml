@@ -36,7 +36,7 @@ jobs:
     name: "[Deprecated] Build"
     needs: check-for-duplicates
     if: ${{ needs.check-for-duplicates.outputs.should_skip != 'true' }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
@@ -53,7 +53,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /home/runner/work/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}/*
-          key: deprecated-build-${{ github.run_number }}-${{ matrix.buildtype }}
+          key: deprecated-build-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.buildtype }}
 
       - name: Checkout cFS
         if: steps.cache-src-bld.outputs.cache-hit != 'true'
@@ -78,7 +78,7 @@ jobs:
   tests-and-coverage-omit-deprecated-false:
     name: "[Deprecated] Run Unit Tests and Check Coverage"
     needs: build-cfs-omit-deprecated-false
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
@@ -99,7 +99,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /home/runner/work/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}/*
-          key: deprecated-build-${{ github.run_number }}-${{ matrix.buildtype }}
+          key: deprecated-build-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.buildtype }}
 
       - name: Run Tests
         run: make test
@@ -110,7 +110,7 @@ jobs:
   run-cfs-omit-deprecated-false:
     name: "[Deprecated] Run cFS"
     needs: build-cfs-omit-deprecated-false
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
@@ -127,7 +127,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /home/runner/work/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}/*
-          key: deprecated-build-${{ github.run_number }}-${{ matrix.buildtype }}
+          key: deprecated-build-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.buildtype }}
 
 
       - name: List cpu1
@@ -160,7 +160,7 @@ jobs:
     #Continue if check-for-duplicates found no duplicates. Always runs for pull-requests.
     needs: run-cfs-omit-deprecated-false
     name: "[DEPRECATED] cFS Functional Tests"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
 
     strategy:
@@ -174,7 +174,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /home/runner/work/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}/*
-          key: deprecated-build-${{ github.run_number }}-${{ matrix.buildtype }}
+          key: deprecated-build-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.buildtype }}
 
       - name: List cpu1
         run: ls build/exe/cpu1/
